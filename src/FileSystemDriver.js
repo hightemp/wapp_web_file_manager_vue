@@ -180,6 +180,7 @@ export class FileSystemDriver {
                     repo: oR.repo,
                     path: sPath
                 }))
+                console.log(aList)
                 fnResolv(aList)
             } catch (oE) {
                 fnReject(oE)
