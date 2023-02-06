@@ -311,9 +311,7 @@ export default {
           iColumnIndex = this.aPath.length-1;
         }
         var aPath = this.aPath.slice();
-        console.log(aPath)
         aPath.splice(iColumnIndex+1)
-        console.log(aPath)
         this.sSelectedFileName = oFile.name
         this.iSelectedFileColumn = iColumnIndex
         this.sSelectedFilePath = aPath.join("/")
@@ -468,7 +466,7 @@ export default {
         'png', 'jpeg', 'jpg', 'gif', 'bmp', 'svg', 'avif'
       ],
       aTextTypes: [
-        'txt', 'js', 'css', 'php', 'py', 'sh', 'json', 'md'
+        'txt', 'js', 'mjs', 'yml', 'css', 'php', 'py', 'sh', 'json', 'md'
       ]
     }
   },
