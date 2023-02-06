@@ -172,9 +172,7 @@ export class FileSystemDriver {
         return new Promise(async (fnResolv, fnReject) => {
             try {
                 console.log(sPath)
-                if (sPath=="//") {
-                    sPath = ""
-                }
+                sPath = sPath.replace(/^\/+/, '')
                 var aList = (await FileSystemDriver.octokit.rest.repos.getContent({
                     owner: oR.login,
                     repo: oR.repo,
@@ -249,18 +247,21 @@ export class FileSystemDriver {
 
     static fnReadFileGithub(sFileName)
     {
-        var oR = FileSystemDriver.oRepoItem
-        return FileSystemDriver.octokit.rest.repos.getContent({
-            owner: oR.login,
-            repo: oR.repo,
-            path: sFileName,
-        }).then(({ data }) => {
-            FileSystemDriver.oDatabase = JSON.parse(decode(data.content))
-            FileSystemDriver.SHA = data.sha
-            return FileSystemDriver.oDatabase
-        }).catch((...aAnsw) => {
-            console.error(oE)
-            fnResolv("")
+        return new Promise(async (fnResolv, fnReject) => {
+            var oR = FileSystemDriver.oRepoItem
+            sFileName = sFileName.replace(/^\/+/, '')
+            return FileSystemDriver.octokit.rest.repos.getContent({
+                owner: oR.login,
+                repo: oR.repo,
+                path: sFileName,
+            }).then(({ data }) => {
+                FileSystemDriver.oDatabase = JSON.parse(decode(data.content))
+                FileSystemDriver.SHA = data.sha
+                return FileSystemDriver.oDatabase
+            }).catch((...aAnsw) => {
+                console.error(oE)
+                fnResolv("")
+            })
         })
     }
 
