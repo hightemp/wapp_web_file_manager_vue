@@ -258,7 +258,7 @@ export class FileSystemDriver {
                 FileSystemDriver.oDatabase = JSON.parse(decode(data.content))
                 FileSystemDriver.SHA = data.sha
                 return FileSystemDriver.oDatabase
-            }).catch((...aAnsw) => {
+            }).catch((oE) => {
                 console.error(oE)
                 fnResolv("")
             })
