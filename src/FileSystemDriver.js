@@ -256,7 +256,7 @@ export class FileSystemDriver {
                 path: sFileName,
             }).then(({ data }) => {
                 var sData = decode(data.content)
-                return sData
+                fnResolv(sData)
             }).catch((oE) => {
                 console.error(oE)
                 fnResolv("")
