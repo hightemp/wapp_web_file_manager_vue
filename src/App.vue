@@ -48,7 +48,11 @@
           <div class="files-list-wrapper_grid-box">
             <button 
               v-for="oFile in aFiles" :key="oFile" 
-              type="button" class="list-group-item list-group-item-action file-grid-item" aria-current="true"
+              type="button" 
+              :class="
+                'list-group-item list-group-item-action file-grid-item '
+                +(iSelectedFileColumn==aPath.length-1 && sSelectedFileName==oFile.name ? 'file-selected ' : '' )
+              " aria-current="true"
               @click="fnClickFileItem(oFile)"
             >
                 <div class="icon-wrapper">
@@ -85,7 +89,10 @@
             </div>
             <div 
               v-for="oFile in aFiles" :key="oFile" 
-              class="list-row"
+              :class="
+                'list-row '
+                +(iSelectedFileColumn==aPath.length-1 && sSelectedFileName==oFile.name ? 'file-selected ' : '' )
+              "
               @click="fnClickFileItem(oFile)"
             >
               <div class="filename-cell">
@@ -109,7 +116,12 @@
           >
             <button 
                 v-for="oFile in aFileColumn" :key="oFile"
-                type="button" :class="'list-group-item list-group-item-action file-item '+(oFile.name==aPath[iIndex+1] ? 'active' : '')"
+                type="button" 
+                :class="
+                  'list-group-item list-group-item-action file-item '
+                  +(oFile.name==aPath[iIndex+1] ? 'active ' : '') 
+                  +(iSelectedFileColumn==iIndex && sSelectedFileName==oFile.name ? 'file-selected ' : '' )
+                "
                 @click="fnClickFileItem(oFile, iIndex)"
             >
                 <span v-show="oFile.type=='directory'" class="icon"><i class="bi bi-folder-fill"></i></span> 
@@ -122,8 +134,12 @@
       </div>
     </div>
     <div class="page-preview">
-      <div class="code-preview" v-show="sPreviewShow=='code'"></div>
-      <div class="image-preview" v-show="sPreviewShow=='image'"></div>
+      <div class="code-preview" v-show="sPreviewShow=='code'">
+        <code class="code">{{sCode}}</code>
+      </div>
+      <div class="image-preview" v-show="sPreviewShow=='image'">
+        <img :src="sImagePath">
+      </div>
     </div>
   </div>
 
@@ -242,6 +258,8 @@
 
 <script>
 
+var hljs = require('highlight.js');
+
 import { FileSystemDriver } from "./FileSystemDriver"
 import Dropdown from "./components/dropdown.vue"
 import FilesColumnList from "./components/files-list.vue"
@@ -282,12 +300,43 @@ export default {
         })
     },
     fnClickFileItem(oFile, iColumnIndex) {
-      if (iColumnIndex !== undefined && iColumnIndex<this.aFilesColumns.length-1) {
-        this.aFilesColumns.splice(iColumnIndex+1)
-        this.aPath.splice(iColumnIndex+1)
-      }
       if (oFile.type == 'directory') {
+        if (iColumnIndex !== undefined && iColumnIndex<this.aFilesColumns.length-1) {
+          this.aFilesColumns.splice(iColumnIndex+1)
+          this.aPath.splice(iColumnIndex+1)
+        }
         this.fnSelectPath(oFile.name)
+      } else {
+        if (iColumnIndex==undefined) {
+          iColumnIndex = this.aPath.length-1;
+        }
+        var aPath = this.aPath.slice();
+        console.log(aPath)
+        aPath.splice(iColumnIndex+1)
+        console.log(aPath)
+        this.sSelectedFileName = oFile.name
+        this.iSelectedFileColumn = iColumnIndex
+        this.sSelectedFilePath = aPath.join("/")
+        this.sSelectedFile = this.sSelectedFilePath+"/"+this.sSelectedFileName
+
+        var aExt = this.sSelectedFileName.split('.').splice(-1);
+        var sExt = aExt[0]+''
+        sExt = sExt.toLowerCase()
+
+        if (~this.aImagesTypes.indexOf(sExt)) {
+          this.sPreviewShow = "image"
+          this.sImagePath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
+        } else if (~this.aTextTypes.indexOf(sExt)) {
+          this.sPreviewShow = "code"
+          FileSystemDriver
+            .fnReadFile(this.sSelectedFile)
+            .then((sCode) => {
+              this.sCode = sCode
+              // hljs.highlightElement(document.querySelector('.code'))
+            })
+        } else {
+          this.sPreviewShow = "binary"
+        }
       }
     },
     fnGoUp() {
@@ -374,6 +423,14 @@ export default {
       bShowBlocker: false,
       bShowEditRepoWindow: true,
 
+      iSelectedFileColumn: null,
+      sSelectedFilePath: null,
+      sSelectedFile: null,
+      sSelectedFileName: null,
+
+      sCode: "",
+      sImagePath: "",
+
       iEditIndex: null,
       iSelectedRepoIndex: null,
       sFormLogin: "",
@@ -384,8 +441,6 @@ export default {
 
       sFilesListType: "column",
       sPreviewShow: "code",
-
-      sSelectedFilePath: "",
 
       iGridPage: 0,
 
@@ -406,7 +461,14 @@ export default {
 
       aPath: [],
       aFiles: [],
-      aFilesColumns: []
+      aFilesColumns: [],
+
+      aImagesTypes: [
+        'png', 'jpeg', 'jpg', 'gif', 'bmp', 'svg', 'avif'
+      ],
+      aTextTypes: [
+        'txt', 'js', 'css', 'php', 'py', 'sh', 'json', 'md'
+      ]
     }
   },
 

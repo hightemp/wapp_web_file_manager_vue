@@ -124,10 +124,10 @@ export class FileSystemDriver {
     static fnReadFile(sFileName)
     {
         if (FileSystemDriver.oRepoItem.type == "github") {
-            return FileSystemDriver.fnReadDatabaseGithub()
+            return FileSystemDriver.fnReadFileGithub(sFileName)
         }
         if (FileSystemDriver.oRepoItem.type == "webdav") {
-            return FileSystemDriver.fnReadDatabaseWebdav()
+            return FileSystemDriver.fnReadFileWebdav(sFileName)
         }
     }
 
@@ -214,56 +214,37 @@ export class FileSystemDriver {
     }
 
 
-    static fnReadDatabaseWebdav()
+    static fnReadFileWebdav(sFileName)
     {
         var oR = FileSystemDriver.oRepoItem
 
         return new Promise(async (fnResolv, fnReject) => {
             try {
-                var oData = (await FileSystemDriver.webdav.getFileContents(FileSystemDriver.DATABASE_PATH))
+                var oData = (await FileSystemDriver.webdav.getFileContents(sFileName))
                 var enc = new TextDecoder("utf-8");
                 var sData = enc.decode(oData)
-                _l('fnReadDatabaseWebdav', sData)
-                FileSystemDriver.oDatabase = JSON.parse(sData)
-                fnResolv(FileSystemDriver.oDatabase)
+                fnResolv(sData)
             } catch (oE) {
-                _l(oE)
-                emitter.emit('database-db-error', oE+'')
-    
-                if (/Not Found/.test(oE+'')) {
-                    emitter.emit('database-db-load-error-notfound', oE+'')
-    
-                    emitter.emit('database-db-save')
-                } else {
-                    emitter.emit('database-db-load-error-github-exception', oE+'')
-                }
+                console.error(oE)
+                fnResolv("")
             }
         })
     }
 
-    static fnReadDatabaseGithub()
+    static fnReadFileGithub(sFileName)
     {
         var oR = FileSystemDriver.oRepoItem
         return FileSystemDriver.octokit.rest.repos.getContent({
             owner: oR.login,
             repo: oR.repo,
-            path: FileSystemDriver.DATABASE_PATH,
+            path: sFileName,
         }).then(({ data }) => {
-            _l('fnGetNotesDatabase', data)
             FileSystemDriver.oDatabase = JSON.parse(decode(data.content))
             FileSystemDriver.SHA = data.sha
-            emitter.emit('database-db-loaded')
             return FileSystemDriver.oDatabase
         }).catch((...aAnsw) => {
-            emitter.emit('database-db-error', aArgs[0]+'')
-
-            if (/Not Found/.test(aAnsw[0])) {
-                emitter.emit('database-db-load-error-notfound', aArgs[0]+'')
-
-                emitter.emit('database-db-save')
-            } else {
-                emitter.emit('database-db-load-error-github-exception', aArgs[0]+'')
-            }
+            console.error(oE)
+            fnResolv("")
         })
     }
 
