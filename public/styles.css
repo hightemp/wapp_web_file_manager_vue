@@ -258,6 +258,7 @@ body, html {
     overflow: auto;
     border: 2px solid rgba(0,0,0,0.1);
     padding: 10px;
+    display: flex;
 }
 
 .code-preview {
