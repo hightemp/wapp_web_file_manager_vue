@@ -181,7 +181,7 @@ export class FileSystemDriver {
                 aList = aList.data.map((oI) => {
                     return {
                         name: oI.name,
-                        type: oI.type,
+                        type: oI.type == 'file' ? 'file' : 'directory',
                         size: oI.size,
                         human_size: humanFileSize(oI.size),
                         created_at: "",
