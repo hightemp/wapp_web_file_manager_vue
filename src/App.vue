@@ -276,7 +276,9 @@ export default {
           oThis.aFiles = aList
           oThis.aFilesColumns.push(aList)
           oThis.bShowLoader = false
-          oThis.$refs.files_list_wrapper.scrollLeft = 10000;
+          setTimeout(() => {
+            oThis.$refs.files_list_wrapper.scrollLeft = 10000;
+          }, 200);
         })
     },
     fnClickFileItem(oFile, iColumnIndex) {

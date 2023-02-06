@@ -206,7 +206,9 @@ export class FileSystemDriver {
                 })
                 fnResolv(aList)
             } catch (oE) {
-                fnReject(oE)
+                console.error(oE)
+                fnResolv([])
+                // fnReject(oE)
             }
         })
     }
