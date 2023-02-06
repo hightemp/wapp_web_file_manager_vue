@@ -5,13 +5,13 @@
     <!-- <div class="modes-panel">
       <a v-for="oMenuItem in aMenu" :key="oMenuItem.class" :class="(sCurrentMode==oMenuItem.class ? 'btn-primary' : '') + ' btn '+oMenuItem.class" :title="oMenuItem.title" @click="fnMenuItemClick(oMenuItem)"><i :class="'bi '+oMenuItem.icon"></i></a>
     </div> -->
-    <div v-show="iActiveRepo === null" class="blocker"></div>
+    <!-- <div v-show="iActiveRepo === null" class="blocker"></div> -->
 
     <div class="account-panel">
       <!-- Репозитории -->
       <div class="account-control-panel">
         <input type="text" class="form-control" />
-        <Dropdown/>
+        <button :class="'btn '" @click="bShowEditRepoWindow=true"><i class="bi bi-pencil"></i></button>
       </div>
       <div class="list-group">
         <button 
@@ -131,7 +131,112 @@
       <div class="lds-dual-ring"></div>
     </div>
   </div>
-  
+
+  <div v-show="bShowEditRepoWindow">
+      <div class="block-overlay"></div>
+
+      <div id="modal-ask-api-key" class="modal show" tabindex="-1">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title">Данные репозитория</h5>
+                  </div>
+                  <div class="modal-body" style="height: 500px; overflow-y: scroll">
+                      <template v-if="iEditIndex!==null">
+                          <div class="modal-ask-api_list_buttons">
+                              <div></div>
+                              <div>
+                                  <button type="button" class="btn btn-danger"
+                                  @click="fnCancelRepo">Отмена</button>
+                                  <button type="button" class="btn btn-primary"
+                                  @click="fnSaveRepo">Сохранить</button>
+                              </div>
+                          </div>
+                          <div class="mb-3">
+                              <label for="" class="form-label">Логин</label>
+                              <select class="form-control" v-model="sFromType">
+                                  <option value="github">github</option>
+                                  <option value="webdav">webdav</option>
+                              </select>
+                          </div>
+                          <div class="mb-3">
+                              <label for="" class="form-label">Название</label>
+                              <input type="text" class="form-control" v-model="sFormName">
+                          </div>
+                          <template v-if="sFromType=='github'">
+                              <div class="mb-3">
+                                  <label for="" class="form-label">Логин</label>
+                                  <input type="text" class="form-control" v-model="sFormLogin">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="" class="form-label">Репозиторий</label>
+                                  <input type="text" class="form-control" v-model="sFormRepo">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="" class="form-label">API Ключ</label>
+                                  <input type="text" class="form-control" v-model="sFormKey">
+                              </div>
+                          </template>
+                          <template v-if="sFromType=='webdav'">
+                              <div class="mb-3">
+                                  <label for="" class="form-label">URL</label>
+                                  <input type="text" class="form-control" v-model="sFormURL">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="" class="form-label">Пользователь</label>
+                                  <input type="text" class="form-control" v-model="sFormUsername">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="" class="form-label">Пароль</label>
+                                  <input type="text" class="form-control" v-model="sFormPassword">
+                              </div>
+                          </template>
+                      </template>
+                      <template v-else>
+                          <div class="modal-ask-api_list_buttons">
+                              <div></div>
+
+                              <div>
+                                  <button class="btn btn-secondary" @click="fnExport">Экспортировать</button>
+
+                                  <button class="btn btn-danger" @click="fnCleanRepo">Очистить</button>
+
+                                  <button class="btn btn-success" @click="fnNewRepo">Добавить</button>
+                              </div>
+                          </div>
+                          <div v-for="(oItem, iIndex) in aRepos" :key="iIndex" :class="'list-repo-item '+(iSelectedRepoIndex==iIndex ? 'active' : '')">
+                              <template v-if="oItem">
+                                  <div class="list-repo-item_desc">
+                                      <div class="list-repo-item_title">
+                                          <div class="list-repo-item_type">{{oItem.type}}</div>
+                                          <div class="list-repo-item_name">{{oItem.name}}</div>
+                                      </div>
+                                      <template v-if="oItem.type=='github'">
+                                          <div><b>login:</b> {{oItem.login}}</div>
+                                          <div><b>repo:</b> {{oItem.repo}}</div>
+                                          <div><b>key:</b> {{oItem.key}}</div>
+                                      </template>
+                                      <template v-if="oItem.type=='webdav'">
+                                          <div><b>url:</b> {{oItem.url}}</div>
+                                          <div><b>username:</b> {{oItem.username}}</div>
+                                          <div><b>password:</b> {{oItem.password}}</div>
+                                      </template>
+                                  </div>
+                                  <div>
+                                      <button class="btn btn-success" @click="fnEditRepo(iIndex)" title="Редактировать"><i class="bi bi-pencil"></i></button>
+                                      <button class="btn btn-danger" @click="fnRemoveRepo(iIndex)" title="Удалить"><i class="bi bi-trash"></i></button>
+                                  </div>
+                              </template>
+                          </div>
+                      </template>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn btn-success" @click="fnCloseRepoWindow">Ok</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </template>
 
 <script>
@@ -200,13 +305,81 @@ export default {
       console.log([sPath, this.aFilesColumns, this.aPath])
       this.fnSelectPath(sPath)
     },
-    
+    fnSaveRepo() {
+      if (!this.sFormName) {
+          alert('Надо заполнить поле - Название')
+          return
+      }
+      var oObj = {
+          "name": this.sFormName, 
+          "login": this.sFormLogin, 
+          "repo": this.sFormRepo, 
+          "key": this.sFormKey,
+          "type": this.sFromType,
+          "url": this.sFormURL,
+          "username": this.sFormUsername,
+          "password": this.sFormPassword,
+      }
+      if (this.iEditIndex==-1) {
+        this.aRepos.push(oObj)
+      } else {
+        this.aRepos.splice(this.iEditIndex, 1, oObj)
+      }
+      localStorage.setItem('aRepos', JSON.stringify(this.aRepos))
+      this.iEditIndex = null
+    },
+    fnNewRepo() {
+        this.iEditIndex = -1
+        this.sFormName = ""
+        this.sFormLogin = ""
+        this.sFormRepo = ""
+        this.sFormKey = ""
+        this.sFormType = "github"
+        this.sFormURL = ""
+        this.sFormUsername = ""
+        this.sFormPassword = ""
+    },
+    fnEditRepo(iIndex) {
+        this.iEditIndex = iIndex
+        this.sFormName = this.aRepos[this.iEditIndex].name
+        this.sFormLogin = this.aRepos[this.iEditIndex].login
+        this.sFormRepo = this.aRepos[this.iEditIndex].repo
+        this.sFormKey = this.aRepos[this.iEditIndex].key
+        this.sFormType = this.aRepos[this.iEditIndex].type
+        this.sFormURL = this.aRepos[this.iEditIndex].url
+        this.sFormUsername = this.aRepos[this.iEditIndex].username
+        this.sFormPassword = this.aRepos[this.iEditIndex].password
+    },
+    fnRemoveRepo(iIndex) {
+      this.aRepos.splice(iIndex, 1)
+      localStorage.setItem('aRepos', JSON.stringify(this.aRepos))
+    },
+    fnCleanRepo() {
+      this.aRepos = []
+      localStorage.setItem('aRepos', JSON.stringify(this.aRepos))
+    },
+    fnCancelRepo() {
+      this.iEditIndex = null
+    },
+    fnCloseRepoWindow() {
+      this.bShowEditRepoWindow = false
+    }
   },
 
   data() {
+    var aRepos = JSON.parse(localStorage.getItem('aRepos') || '[]');
     return {
       bShowLoader: false,
       bShowBlocker: false,
+      bShowEditRepoWindow: true,
+
+      iEditIndex: null,
+      iSelectedRepoIndex: null,
+      sFormLogin: "",
+      sFormRepo: "",
+      sFormKey: "",
+      sFormURL: "",
+      sFromType: "github",
 
       sFilesListType: "column",
       sPreviewShow: "code",
@@ -215,6 +388,14 @@ export default {
 
       iGridPage: 0,
 
+      aRepoItemMenu: [
+        { id:"edit", title:'<i class="bi bi-pencil"></i> Редактировать' },
+        { id:"delete", title:'<i class="bi bi-trash"></i> Удалить' },
+      ],
+      aRepoMenu: [
+        { id:"reload", title:'<i class="bi bi-arrow-repeat"></i> Обновить' },
+        { id:"add", title:'<i class="bi bi-plus-lg"></i> Добавить' },
+      ],
       aMenu: [],
 
       aPathHistory: [],
