@@ -290,6 +290,10 @@ body, html {
     height: 100%;
 }
 
+.sort {
+    cursor: pointer;
+}
+
 .modal.show {
     display: block;
 }

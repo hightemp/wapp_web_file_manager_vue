@@ -82,16 +82,16 @@
         <div class="files-list-wrapper_list-box">
           <div class="files-list-list">
             <div class="list-row header">
-              <div>name
+              <div><div class="sort" @click="sListFilterColumn='name', sListFilterColumn=='name' ? iListSortOrder = -iListSortOrder : null">name</div> 
                 <div><input type="text" class="form-control" v-model="sListFilterName"/></div>
               </div>
-              <div>size
+              <div><div class="sort" @click="sListFilterColumn='size', sListFilterColumn=='size' ? iListSortOrder = -iListSortOrder : null">size</div>
                 <div><input type="text" class="form-control" v-model="sListFilterSize" /></div>
               </div>
-              <div>created at
+              <div><div class="sort" @click="sListFilterColumn='created_at', sListFilterColumn=='created_at' ? iListSortOrder = -iListSortOrder : null">created at</div>
                 <div><input type="text" class="form-control" v-model="sListFilterCreatedAt" /></div>
               </div>
-              <div>modified at
+              <div><div class="sort" @click="sListFilterColumn='updated_at', sListFilterColumn=='updated_at' ? iListSortOrder = -iListSortOrder : null">modified at</div>
                 <div><input type="text" class="form-control" v-model="sListFilterModified" /></div>
               </div>
             </div>
@@ -291,7 +291,7 @@ export default {
         ~oI.human_size.indexOf(this.sListFilterSize) && 
         ~oI.created_at.indexOf(this.sListFilterCreatedAt) && 
         ~oI.updated_at.indexOf(this.sListFilterModified)
-      )
+      ).sort((oA, oB) => oB[this.sListFilterColumn]<oA[this.sListFilterColumn] ? 1*this.iListSortOrder : -1*this.iListSortOrder)
     }
   },
 
@@ -458,6 +458,9 @@ export default {
       sListFilterSize: "",
       sListFilterCreatedAt: "",
       sListFilterModified: "",
+
+      sListFilterColumn: "name",
+      iListSortOrder: 1,
 
       sCode: "",
       sImagePath: "",
