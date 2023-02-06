@@ -352,7 +352,7 @@ export default {
             if (oRepo.url) {
               this.sImagePath = oRepo.url.replace(/\/+$/, '')+"/"+this.sSelectedFile.replace(/^\/+/, '')
             } else {
-              this.sImagePath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
+              this.sImagePath = `https://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
             }
           } else {
             this.sImagePath = oRepo.url+this.sSelectedFile.replace(/^\/+/, '')
@@ -363,7 +363,7 @@ export default {
             if (oRepo.url) {
               this.sPDFPath = oRepo.url.replace(/\/+$/, '')+"/"+this.sSelectedFile.replace(/^\/+/, '')
             } else {
-              this.sPDFPath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile.replace(/^\/+/, '')
+              this.sPDFPath = `https://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile.replace(/^\/+/, '')
             }
           } else {
             this.sPDFPath = oRepo.url.replace(/\/+$/, '')+"/"+this.sSelectedFile.replace(/^\/+/, '')
