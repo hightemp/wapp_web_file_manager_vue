@@ -180,6 +180,16 @@ export class FileSystemDriver {
                     repo: oR.repo,
                     path: sPath
                 }))
+                aList = aList.data.map((oI) => {
+                    return {
+                        name: oI.name,
+                        type: oI.type,
+                        size: oI.size,
+                        human_size: humanFileSize(oI.size),
+                        created_at: "",
+                        updated_at: ""
+                    }
+                })
                 console.log(aList)
                 fnResolv(aList)
             } catch (oE) {
