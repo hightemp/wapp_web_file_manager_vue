@@ -366,7 +366,7 @@ export default {
               this.sPDFPath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
             }
           } else {
-            this.sPDFPath = oRepo.url+this.sSelectedFile
+            this.sPDFPath = oRepo.url.replace(/\/+$/, '')+"/"+this.sSelectedFile.replace(/^\/+/, '')
           }
           // this.sPDFPath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
         } else if (~this.aTextTypes.indexOf(sExt)) {
