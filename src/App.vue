@@ -309,6 +309,7 @@ export default {
     fnSelectPath(sPath) {
       var oThis = this
       oThis.aPath.push(sPath)
+      aPath = aPath.filter((oI) => oI)
       oThis.bShowLoader = true
       FileSystemDriver
         .fnList("/"+this.aPath.join("/"))
@@ -345,10 +346,29 @@ export default {
 
         if (~this.aImagesTypes.indexOf(sExt)) {
           this.sPreviewShow = "image"
-          this.sImagePath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
+          var oRepo = this.aRepos[this.iActiveRepo]
+          if (oRepo.type == "github") {
+            // https://raw.githubusercontent.com/hightemp/doc_all/main/2023-02-06_07-31.png
+            if (oRepo.url) {
+              this.sImagePath = oRepo.url+this.sSelectedFile
+            } else {
+              this.sImagePath = `https://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
+            }
+          } else {
+            this.sImagePath = oRepo.url+this.sSelectedFile
+          }
         } else if (~this.aPDFTypes.indexOf(sExt)) {
           this.sPreviewShow = "pdf"
-          this.sPDFPath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
+          if (oRepo.type == "github") {
+            if (oRepo.url) {
+              this.sPDFPath = oRepo.url+this.sSelectedFile
+            } else {
+              this.sPDFPath = `https://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
+            }
+          } else {
+            this.sPDFPath = oRepo.url+this.sSelectedFile
+          }
+          // this.sPDFPath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
         } else if (~this.aTextTypes.indexOf(sExt)) {
           this.sPreviewShow = "code"
           this.bShowLoader = true
