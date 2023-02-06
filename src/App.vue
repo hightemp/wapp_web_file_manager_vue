@@ -343,10 +343,10 @@ export default {
         var aExt = this.sSelectedFileName.split('.').splice(-1);
         var sExt = aExt[0]+''
         sExt = sExt.toLowerCase()
+        var oRepo = this.aRepos[this.iActiveRepo]
 
         if (~this.aImagesTypes.indexOf(sExt)) {
-          this.sPreviewShow = "image"
-          var oRepo = this.aRepos[this.iActiveRepo]
+          this.sPreviewShow = "image"  
           if (oRepo.type == "github") {
             // https://raw.githubusercontent.com/hightemp/doc_all/main/2023-02-06_07-31.png
             if (oRepo.url) {
