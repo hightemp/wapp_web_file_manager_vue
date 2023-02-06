@@ -1,5 +1,7 @@
 # wapp_web_file_manager_vue
 
+![](https://asdertasd.site/counter/wapp_web_file_manager_vue)
+
 Менеджер файлов для webdav, github.
 
 ## Перед сборкой
