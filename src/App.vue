@@ -134,6 +134,9 @@
       </div>
     </div>
     <div class="page-preview">
+      <div class="pdf-preview" v-show="sPreviewShow=='pdf'">
+        <iframe :src="sPDFPath"></iframe>
+      </div>
       <div class="code-preview" v-show="sPreviewShow=='code'">
         <code class="code" v-html="sCode"></code>
       </div>
@@ -324,6 +327,9 @@ export default {
         if (~this.aImagesTypes.indexOf(sExt)) {
           this.sPreviewShow = "image"
           this.sImagePath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
+        } else if (~this.aPDFTypes.indexOf(sExt)) {
+          this.sPreviewShow = "pdf"
+          this.sPDFPath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
         } else if (~this.aTextTypes.indexOf(sExt)) {
           this.sPreviewShow = "code"
           FileSystemDriver
@@ -429,6 +435,7 @@ export default {
 
       sCode: "",
       sImagePath: "",
+      sPDFPath: "",
 
       iEditIndex: null,
       iSelectedRepoIndex: null,
@@ -467,7 +474,10 @@ export default {
       ],
       aTextTypes: [
         'txt', 'js', 'mjs', 'yml', 'css', 'php', 'py', 'sh', 'json', 'md'
-      ]
+      ],
+      aPDFTypes: [
+        'pdf'
+      ],
     }
   },
 
