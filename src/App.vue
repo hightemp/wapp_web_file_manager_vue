@@ -350,20 +350,20 @@ export default {
           if (oRepo.type == "github") {
             // https://raw.githubusercontent.com/hightemp/doc_all/main/2023-02-06_07-31.png
             if (oRepo.url) {
-              this.sImagePath = oRepo.url+this.sSelectedFile
+              this.sImagePath = oRepo.url.replace(/\/+$/, '')+"/"+this.sSelectedFile.replace(/^\/+/, '')
             } else {
               this.sImagePath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
             }
           } else {
-            this.sImagePath = oRepo.url+this.sSelectedFile
+            this.sImagePath = oRepo.url+this.sSelectedFile.replace(/^\/+/, '')
           }
         } else if (~this.aPDFTypes.indexOf(sExt)) {
           this.sPreviewShow = "pdf"
           if (oRepo.type == "github") {
             if (oRepo.url) {
-              this.sPDFPath = oRepo.url+this.sSelectedFile
+              this.sPDFPath = oRepo.url.replace(/\/+$/, '')+"/"+this.sSelectedFile.replace(/^\/+/, '')
             } else {
-              this.sPDFPath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
+              this.sPDFPath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile.replace(/^\/+/, '')
             }
           } else {
             this.sPDFPath = oRepo.url.replace(/\/+$/, '')+"/"+this.sSelectedFile.replace(/^\/+/, '')
