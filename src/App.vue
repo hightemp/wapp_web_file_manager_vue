@@ -309,7 +309,7 @@ export default {
     fnSelectPath(sPath) {
       var oThis = this
       oThis.aPath.push(sPath)
-      aPath = aPath.filter((oI) => oI)
+      oThis.aPath = oThis.aPath.filter((oI) => oI)
       oThis.bShowLoader = true
       FileSystemDriver
         .fnList("/"+this.aPath.join("/"))
