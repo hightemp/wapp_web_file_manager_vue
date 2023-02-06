@@ -201,6 +201,7 @@ export class FileSystemDriver {
                         type: oI.type,
                         size: oI.size,
                         human_size: humanFileSize(oI.size),
+                        created_at: "",
                         updated_at: (new Date(oI.lastmod)).toLocaleString("ru-RU")
                     }
                 })

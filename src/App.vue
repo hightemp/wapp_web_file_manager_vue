@@ -82,13 +82,21 @@
         <div class="files-list-wrapper_list-box">
           <div class="files-list-list">
             <div class="list-row header">
-              <div>name</div>
-              <div>size</div>
-              <div>created at</div>
-              <div>modified at</div>
+              <div>name
+                <div><input type="text" class="form-control" v-model="sListFilterName"/></div>
+              </div>
+              <div>size
+                <div><input type="text" class="form-control" v-model="sListFilterSize" /></div>
+              </div>
+              <div>created at
+                <div><input type="text" class="form-control" v-model="sListFilterCreatedAt" /></div>
+              </div>
+              <div>modified at
+                <div><input type="text" class="form-control" v-model="sListFilterModified" /></div>
+              </div>
             </div>
             <div 
-              v-for="oFile in aFiles" :key="oFile" 
+              v-for="oFile in aFilteredListFiles" :key="oFile" 
               :class="
                 'list-row '
                 +(iSelectedFileColumn==aPath.length-1 && sSelectedFileName==oFile.name ? 'file-selected ' : '' )
@@ -276,6 +284,17 @@ export default {
     Dropdown,
   },
 
+  computed: {
+    aFilteredListFiles() {
+      return this.aFiles.filter((oI) => 
+        ~oI.name.indexOf(this.sListFilterName) && 
+        ~oI.human_size.indexOf(this.sListFilterSize) && 
+        ~oI.created_at.indexOf(this.sListFilterCreatedAt) && 
+        ~oI.updated_at.indexOf(this.sListFilterModified)
+      )
+    }
+  },
+
   methods: {
     fnSlectRepo(iIndex, oRepo) {
       this.iActiveRepo = iIndex;
@@ -332,9 +351,11 @@ export default {
           this.sPDFPath = this.aRepos[this.iActiveRepo].url+this.sSelectedFile
         } else if (~this.aTextTypes.indexOf(sExt)) {
           this.sPreviewShow = "code"
+          this.bShowLoader = true
           FileSystemDriver
             .fnReadFile(this.sSelectedFile)
             .then((sCode) => {
+              this.bShowLoader = false
               // this.sCode = sCode
               this.sCode = hljs.highlightAuto(sCode).value
               // hljs.highlightElement(document.querySelector('.code'))
@@ -432,6 +453,11 @@ export default {
       sSelectedFilePath: null,
       sSelectedFile: null,
       sSelectedFileName: null,
+
+      sListFilterName: "",
+      sListFilterSize: "",
+      sListFilterCreatedAt: "",
+      sListFilterModified: "",
 
       sCode: "",
       sImagePath: "",
