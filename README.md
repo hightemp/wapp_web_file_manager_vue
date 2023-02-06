@@ -10,6 +10,7 @@
 mv env.example.js env.js
 ```
 
-![](images/2023-02-06_02-48.png)
-![](images/2023-02-06_02-56.png)
-![](images/2023-02-06_02-57.png)
+![](images/2023-02-06_07-31.png)
+<img width="300px" src="images/2023-02-06_02-48.png">
+<img width="300px" src="images/2023-02-06_02-56.png">
+<img width="300px" src="images/2023-02-06_02-57.png">
