@@ -30,6 +30,18 @@ Alias /webdav /var/www/webdav
 </Directory>
 ```
 
+```bash
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+```
+
+```
+<VirtualHost *:443>
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+    SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+</VirtualHost>
+```
+
 ![](images/2023-02-06_07-31.png)
 <img width="300px" src="images/2023-02-06_02-48.png">
 <img width="300px" src="images/2023-02-06_02-56.png">

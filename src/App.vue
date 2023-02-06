@@ -352,7 +352,7 @@ export default {
             if (oRepo.url) {
               this.sImagePath = oRepo.url+this.sSelectedFile
             } else {
-              this.sImagePath = `https://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
+              this.sImagePath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
             }
           } else {
             this.sImagePath = oRepo.url+this.sSelectedFile
@@ -363,7 +363,7 @@ export default {
             if (oRepo.url) {
               this.sPDFPath = oRepo.url+this.sSelectedFile
             } else {
-              this.sPDFPath = `https://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
+              this.sPDFPath = `://raw.githubusercontent.com/${oRepo.login}/${oRepo.repo}/main/`+this.sSelectedFile
             }
           } else {
             this.sPDFPath = oRepo.url+this.sSelectedFile
