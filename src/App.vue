@@ -100,7 +100,8 @@
           </div>
         </div>
       </div>
-      <div class="files-list-wrapper" v-if="sFilesListType=='column'">
+      <!-- Колонка -->
+      <div class="files-list-wrapper" v-if="sFilesListType=='column'" ref="files_list_wrapper">
         <div class="files-list-wrapper_box">
           <div 
             v-for="(aFileColumn, iIndex) in aFilesColumns" :key="aFileColumn"
@@ -266,19 +267,19 @@ export default {
       this.aFilesColumns = [];
     },
     fnSelectPath(sPath) {
-      this.aPath.push(sPath)
-      this.bShowLoader = true
+      var oThis = this
+      oThis.aPath.push(sPath)
+      oThis.bShowLoader = true
       FileSystemDriver
         .fnList("/"+this.aPath.join("/"))
         .then((aList) => {
-          this.aFiles = aList
-          this.aFilesColumns.push(aList)
-          this.bShowLoader = false
-          console.log(aList)
+          oThis.aFiles = aList
+          oThis.aFilesColumns.push(aList)
+          oThis.bShowLoader = false
+          oThis.$refs.files_list_wrapper.scrollLeft = 10000;
         })
     },
     fnClickFileItem(oFile, iColumnIndex) {
-      console.log('>>',[iColumnIndex, this.aFilesColumns.length]);
       if (iColumnIndex !== undefined && iColumnIndex<this.aFilesColumns.length-1) {
         this.aFilesColumns.splice(iColumnIndex+1)
         this.aPath.splice(iColumnIndex+1)
@@ -295,14 +296,12 @@ export default {
       var sPath = this.aPath[this.aPath.length-2]
       this.aFilesColumns.splice(iColumnIndex-1)
       this.aPath.splice(iColumnIndex-1)
-      console.log([sPath, iColumnIndex-1, this.aFilesColumns, this.aPath])
       this.fnSelectPath(sPath)
     },
     fnOpenPathByIndex(iI) {
       var sPath = this.aPath[iI]
       this.aFilesColumns.splice(iI)
       this.aPath.splice(iI)
-      console.log([sPath, this.aFilesColumns, this.aPath])
       this.fnSelectPath(sPath)
     },
     fnSaveRepo() {
