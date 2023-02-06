@@ -255,9 +255,8 @@ export class FileSystemDriver {
                 repo: oR.repo,
                 path: sFileName,
             }).then(({ data }) => {
-                FileSystemDriver.oDatabase = JSON.parse(decode(data.content))
-                FileSystemDriver.SHA = data.sha
-                return FileSystemDriver.oDatabase
+                var sData = decode(data.content)
+                return sData
             }).catch((oE) => {
                 console.error(oE)
                 fnResolv("")
