@@ -135,7 +135,7 @@
     </div>
     <div class="page-preview">
       <div class="code-preview" v-show="sPreviewShow=='code'">
-        <code class="code">{{sCode}}</code>
+        <code class="code" v-html="sCode"></code>
       </div>
       <div class="image-preview" v-show="sPreviewShow=='image'">
         <img :src="sImagePath">
@@ -171,7 +171,7 @@
                           </div>
                           <div class="mb-3">
                               <label for="" class="form-label">Логин</label>
-                              <select class="form-control" v-model="sFromType">
+                              <select class="form-control" v-model="sFormType">
                                   <option value="github">github</option>
                                   <option value="webdav">webdav</option>
                               </select>
@@ -180,7 +180,7 @@
                               <label for="" class="form-label">Название</label>
                               <input type="text" class="form-control" v-model="sFormName">
                           </div>
-                          <template v-if="sFromType=='github'">
+                          <template v-if="sFormType=='github'">
                               <div class="mb-3">
                                   <label for="" class="form-label">Логин</label>
                                   <input type="text" class="form-control" v-model="sFormLogin">
@@ -194,7 +194,7 @@
                                   <input type="text" class="form-control" v-model="sFormKey">
                               </div>
                           </template>
-                          <template v-if="sFromType=='webdav'">
+                          <template v-if="sFormType=='webdav'">
                               <div class="mb-3">
                                   <label for="" class="form-label">URL</label>
                                   <input type="text" class="form-control" v-model="sFormURL">
@@ -331,7 +331,8 @@ export default {
           FileSystemDriver
             .fnReadFile(this.sSelectedFile)
             .then((sCode) => {
-              this.sCode = sCode
+              // this.sCode = sCode
+              this.sCode = hljs.highlightAuto(sCode).value
               // hljs.highlightElement(document.querySelector('.code'))
             })
         } else {
@@ -365,7 +366,7 @@ export default {
           "login": this.sFormLogin, 
           "repo": this.sFormRepo, 
           "key": this.sFormKey,
-          "type": this.sFromType,
+          "type": this.sFormType,
           "url": this.sFormURL,
           "username": this.sFormUsername,
           "password": this.sFormPassword,
@@ -437,7 +438,7 @@ export default {
       sFormRepo: "",
       sFormKey: "",
       sFormURL: "",
-      sFromType: "github",
+      sFormType: "github",
 
       sFilesListType: "column",
       sPreviewShow: "code",
