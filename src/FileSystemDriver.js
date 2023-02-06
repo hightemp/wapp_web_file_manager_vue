@@ -172,6 +172,9 @@ export class FileSystemDriver {
         return new Promise(async (fnResolv, fnReject) => {
             try {
                 console.log(sPath)
+                if (sPath=="//") {
+                    sPath = ""
+                }
                 var aList = (await FileSystemDriver.octokit.rest.repos.getContent({
                     owner: oR.login,
                     repo: oR.repo,
