@@ -73,7 +73,6 @@ export class FileSystemDriver {
 
     static fnInitGit()
     {
-        _s('Database.fnInitGit')
         FileSystemDriver.octokit = new Octokit({
             auth: FileSystemDriver.oRepoItem.key,
         });
@@ -172,7 +171,7 @@ export class FileSystemDriver {
 
         return new Promise(async (fnResolv, fnReject) => {
             try {
-                var aList = (await octokit.rest.repos.getContent({
+                var aList = (await FileSystemDriver.octokit.rest.repos.getContent({
                     owner: oR.login,
                     repo: oR.repo,
                     path: sPath
