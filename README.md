@@ -25,7 +25,7 @@ Alias /webdav /var/www/webdav
     Header always set Access-Control-Allow-Origin "*"
     Header always set Access-Control-Allow-Headers "origin, content-type, cache-control, accept, authorization, if-match, destination, overwrite, depth"
     Header always set Access-Control-Expose-Headers "ETag"
-    Header always set Access-Control-Allow-Methods "GET, HEAD, POST, PUT, OPTIONS, MOVE, DELETE, COPY, LOCK, UNLOCK, PROPFIND"
+    Header always set Access-Control-Allow-Methods "GET, HEAD, POST, PUT, OPTIONS, MOVE, DELETE, COPY, LOCK, UNLOCK, PROPFIND, MKCOL"
     Header always set Access-Control-Allow-Credentials "true"
 </Directory>
 ```
