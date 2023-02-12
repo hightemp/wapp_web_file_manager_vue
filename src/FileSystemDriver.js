@@ -269,9 +269,10 @@ export class FileSystemDriver {
         _s('Database.fnWriteNotesDatabase')
         var sData = JSON.stringify(FileSystemDriver.oDatabase, null, 4)
         var oR = FileSystemDriver.oRepoItem
+        sFileName = sFileName.replace(/^\/+/, '')
         return FileSystemDriver.octokit.rest.repos.createOrUpdateFileContents({
-            owner: oR.sLogin,
-            repo: oR.sRepo,
+            owner: oR.login,
+            repo: oR.repo,
             path: FileSystemDriver.DATABASE_PATH,
             sha: FileSystemDriver.SHA,
             message: FileSystemDriver.fnGetUpdateMessage(),

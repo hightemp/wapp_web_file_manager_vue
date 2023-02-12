@@ -318,7 +318,9 @@ export default {
           oThis.aFilesColumns.push(aList)
           oThis.bShowLoader = false
           setTimeout(() => {
-            oThis.$refs.files_list_wrapper.scrollLeft = 10000;
+            if (oThis.$refs.files_list_wrapper) {
+              oThis.$refs.files_list_wrapper.scrollLeft = 10000;
+            }
           }, 200);
         })
     },
