@@ -524,7 +524,7 @@ export default {
         'png', 'jpeg', 'jpg', 'gif', 'bmp', 'svg', 'avif'
       ],
       aTextTypes: [
-        'txt', 'js', 'mjs', 'yml', 'css', 'php', 'py', 'sh', 'json', 'md'
+        'txt', 'js', 'mjs', 'yml', 'css', 'php', 'py', 'sh', 'json', 'md', 'html'
       ],
       aPDFTypes: [
         'pdf'
