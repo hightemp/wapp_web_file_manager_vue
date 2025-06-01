@@ -53,14 +53,22 @@ body, html {
 
 .account-control-panel {
     display: flex;
-    height: 30px;
+    align-items: center;
+    /* height: 30px; */ /* Changed to min-height to allow content to define height */
+    min-height: 30px;
     border-bottom: 1px solid #eee;
+    padding: 4px 5px; /* Added padding for breathing room */
+    gap: 5px;          /* Added gap for spacing between elements */
 }
 
 .files-control-panel {
     display: flex;
-    height: 30px;
+    align-items: center;
+    /* height: 30px; */ /* Changed to min-height */
+    min-height: 30px;
     border-bottom: 1px solid #eee;
+    padding: 4px 5px; /* Added padding */
+    gap: 5px;          /* Added gap */
 }
 
 .files-list-wrapper {
@@ -135,10 +143,16 @@ body, html {
 .files-grid-control-panel .path-wrapper {
     display: flex;
     overflow: hidden;
+    gap: 5px; /* Added gap for spacing between icon and path segments */
+    align-items: center; /* Vertically align items in path */
 }
 
-.files-grid-control-panel .path-wrapper > * {
+/* .files-grid-control-panel .path-wrapper > * {
     padding: 5px;
+} */ /* Removed generic padding, apply specifically to .path-link */
+
+.files-grid-control-panel .path-wrapper > .path-link {
+    padding: 5px; /* Keep padding for links */
 }
 
 .files-grid-control-panel .path-link {
@@ -165,9 +179,16 @@ body, html {
 .files-list-control-panel .path-wrapper {
     display: flex;
     overflow: hidden;
+    gap: 5px; /* Added gap for spacing */
+    align-items: center; /* Vertically align items */
 }
 
-.files-list-control-panel .path-link {
+/* .files-list-control-panel .path-wrapper > * {
+    padding: 5px;
+} */ /* Removed generic padding */
+
+.files-list-control-panel .path-wrapper > .path-link {
+    padding: 5px; /* Keep padding for links */
     cursor: pointer;
     background: rgba(0,0,0,0.05);
     border-radius: 5px !important;
@@ -175,11 +196,6 @@ body, html {
 
 .files-list-control-panel .path-link:hover {
     background: rgba(0,0,0,0.1);
-}
-
-
-.files-list-control-panel .path-wrapper > * {
-    padding: 5px;
 }
 
 .files-list-as-list-wrapper {
