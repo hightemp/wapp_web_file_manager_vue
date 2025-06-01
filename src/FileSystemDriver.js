@@ -191,10 +191,9 @@ export class FileSystemDriver {
                 console.log(aList)
                 fnResolv(aList)
             } catch (oE) {
-                fnReject(oE)
+                fnReject(oE);
             }
         })
-        
     }
 
     static fnListWebdav(sPath)
@@ -220,9 +219,8 @@ export class FileSystemDriver {
                 })
                 fnResolv(aList)
             } catch (oE) {
-                console.error(oE)
-                fnResolv([])
-                // fnReject(oE)
+                console.error('WebDAV fnList error for path "' + sPath + '":', oE);
+                fnReject(oE);
             }
         })
     }
@@ -239,8 +237,8 @@ export class FileSystemDriver {
                 var sData = enc.decode(oData)
                 fnResolv(sData)
             } catch (oE) {
-                console.error(oE)
-                fnResolv("")
+                console.error('WebDAV fnReadFile error for path "' + sFileName + '":', oE);
+                fnReject(oE);
             }
         })
     }
@@ -258,8 +256,8 @@ export class FileSystemDriver {
                 var sData = decode(data.content)
                 fnResolv(sData)
             }).catch((oE) => {
-                console.error(oE)
-                fnResolv("")
+                console.error('GitHub fnReadFile error for path "' + sFileName + '":', oE);
+                fnReject(oE);
             })
         })
     }
