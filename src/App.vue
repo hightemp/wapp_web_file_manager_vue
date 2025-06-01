@@ -316,12 +316,24 @@ export default {
         .then((aList) => {
           oThis.aFiles = aList
           oThis.aFilesColumns.push(aList)
-          oThis.bShowLoader = false
           setTimeout(() => {
             if (oThis.$refs.files_list_wrapper) {
               oThis.$refs.files_list_wrapper.scrollLeft = 10000;
             }
           }, 200);
+        })
+        .catch(oError => {
+          console.error("Ошибка при загрузке списка файлов для пути " + oThis.aPath.join("/") + ":", oError);
+          let detailMessage = String(oError);
+          if (oError && oError.response && oError.response.data && typeof oError.response.data.message === 'string') {
+            detailMessage = oError.response.data.message;
+          } else if (oError instanceof Error && typeof oError.message === 'string') {
+            detailMessage = oError.message;
+          }
+          alert('Ошибка при загрузке списка файлов.\nДетали: ' + detailMessage);
+        })
+        .finally(() => {
+          oThis.bShowLoader = false;
         })
     },
     fnClickFileItem(oFile, iColumnIndex) {
@@ -376,11 +388,24 @@ export default {
           this.bShowLoader = true
           FileSystemDriver
             .fnReadFile(this.sSelectedFile)
-            .then((sCode) => {
-              this.bShowLoader = false
+            .then(sCode => {
               // this.sCode = sCode
               this.sCode = hljs.highlightAuto(sCode).value
               // hljs.highlightElement(document.querySelector('.code'))
+            })
+            .catch(oError => {
+              console.error("Ошибка при чтении файла " + this.sSelectedFile + ":", oError);
+              let detailMessage = String(oError);
+              if (oError && oError.response && oError.response.data && typeof oError.response.data.message === 'string') {
+                detailMessage = oError.response.data.message;
+              } else if (oError instanceof Error && typeof oError.message === 'string') {
+                detailMessage = oError.message;
+              }
+              alert('Ошибка при чтении файла.\nДетали: ' + detailMessage);
+              this.sCode = ""; // Clear preview on error
+            })
+            .finally(() => {
+              this.bShowLoader = false;
             })
         } else {
           this.sPreviewShow = "binary"
