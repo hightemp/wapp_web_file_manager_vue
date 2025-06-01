@@ -4,6 +4,8 @@
 
 Менеджер файлов для webdav, github.
 
+Демо: https://hightemp.github.io/wapp_web_file_manager_vue/
+
 ## Перед сборкой
 
 ```
